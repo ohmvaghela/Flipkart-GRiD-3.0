@@ -2,15 +2,52 @@
 
 - Functions
 
-| Function | Defination   | Input |
-| -------- | ------------ |-|
-| size_mod | Resize Image | image , times|
-| orientation_line_from_angle | Draw Line | image, angle, center_coorinates| 
-| min_dist | Euler Distance | coordiante_1, coordiante_2 |
-|img_align | Prespective Transfromation of image from points (a,b,c,d) to (a1,b1,c1,d1)  vertex of rectangle (Goto end for code) | image, inital points (a,b,c,d), final size of image height and width |
+# Main Function
+- Initialize botFinder
+    - Initialize empty bot dict
+    - Initialize pickup points
+    - Initialize bot location
+- Give points to wrap image (Frame caputed)
+- Capture frame 
+- Algin frame using `img_align`
+- Feed image to BotFinder.give_frame(img)
+- Get croped image using BotFinder.ret()
+- Put text on each bot and and line for orientation 
 
-## Classes
+# Classes
 
+### BotFinder
+- Variables
+    | Varable | Defination |
+    |- | -|
+    |bot_ID_all|list of all bot_id available|
+    |init1,init2|Pickup points|
+- ret : returns dict of key as botID and value as (x,y,theta)
+- give_frame
+    - ExtractContour return array of croped images
+    - Then each image is processed
+    - Depending no it's new value of center it updates that botID's pose
+        - Say current position of the detected bot is 1211,631
+        - So for the existing bots it will find it's euler's distance is less then 50 it will be updated  
+
+
+### ExtractContour
+- Crop images and pose of all 4 bots and returns it an array
+- Steps
+    - Convert to HSV
+    - purple mask
+    - Morphologial Open
+    - Blue
+    - Morph Erode
+    - Canny Edge
+    - FindContour
+    - For all the contours in detected contours
+        - crop a bounding box
+        - Append this bounding box to list of images
+        - Get angle of orientation by feeding to angle class
+
+
+    
 ### Angle
 
 | Function | Defination   | Input |
@@ -19,37 +56,44 @@
 | orientation_line_from_angle | Draw Line | image, angle, center_coorinates| 
 | min_dist | Euler Distance | coordiante_1, coordiante_2 |
 
-### BotFinder
-- Variables
-    | Varable | Defination |
-    |- | -|
-    |bot_ID_all|list of all bot_id available|
-    |init1,init2|Pickup points|
+- Init 
+    - Find light source using hsv with high value in hsv
+    - use findContour to get light value 
+    - Take biggest contour to avoid noise
+    - This will get us a dot 
+    - find angle of dot by conneting it with the center of image
+    - Draw a line from center to point found
+- angle_b
+    - get bot's orientaiton
+- ret
+    - return angle in range of [ `-pi` , `+pi` ]
 
 
->#### imageAlign
-> ```python
->   def img_align(img,pts,size_x,size_y):
->       img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
->       rows,cols,ch = img_gray.shape
->       pts1 = np.float32(pts)
->       pts2 = np.float32([[0,0],[size_x,0],[size_x,size_y],[0,size_y]])
->       # Get transform matrix 
->       M = cv2.getPerspectiveTransform(pts1,pts2)
->       # Crop matrix, multiply matrix, resize matrix
->       dst = cv2.warpPerspective(img,M,(size_x,size_y))
->       return dst
-> ```
+# Functions
 
-### ExtractContour
-
-- Convert to HSV
-- purple mask
-- Morphologial Open
-- Blue
-- Morph Erode
+| Function | Defination   | Input |
+| -------- | ------------ |-|
+| size_mod | Resize Image | image , times|
+| orientation_line_from_angle | Draw Line | image, angle, center_coorinates| 
+| min_dist | Euler Distance | coordiante_1, coordiante_2 |
+|img_align | Prespective Transfromation of image from points (a,b,c,d) to (a1,b1,c1,d1)  vertex of rectangle (Goto end for code) | image, inital points (a,b,c,d), final size of image height and width |
 
 
+### imageAlign
+ ```python
+   def img_align(img,pts,size_x,size_y):
+       img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+       rows,cols,ch = img_gray.shape
+       pts1 = np.float32(pts)
+       pts2 = np.float32([[0,0],[size_x,0],[size_x,size_y],[0,size_y]])
+       # Get transform matrix 
+       M = cv2.getPerspectiveTransform(pts1,pts2)
+       # Crop matrix, multiply matrix, resize matrix
+       dst = cv2.warpPerspective(img,M,(size_x,size_y))
+       return dst
+ ```
+
+# Basic ImageProcessing theory
 
 ### Morphological Operation
 - GreyScale 
@@ -65,7 +109,6 @@
     - Dilate and Erode
 - Gradient
     - Dilate - Erode
-    
 
 ### Canny Edge
 
@@ -105,3 +148,4 @@
     <img src='./thresh.png' width="500"/>
 
     </center>
+
