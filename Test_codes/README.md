@@ -110,6 +110,34 @@
 - Gradient
     - Dilate - Erode
 
+### Find Contour
+``` python
+cv.findContours(
+    image, 
+    mode, 
+    method[, contours[, hierarchy[, offset]]]) 
+    ->	
+image, 
+contours, 
+hierarchy
+```
+> hierarchy : [ `Next`, `Previous`, `First_Child`, `Parent`]
+- Mode
+    - RETR_EXTERNAL : Only external contour 
+    - RETR_LIST : All contour without relationnship
+    - RETR_CCOMP : Two level hierarchy 
+        - Say have 5 rect one inside other
+        - named as from 1 to 5 with 1 as most external and 5 is most internal
+        - So at hierarchy 
+            1. 1,3,5
+            2. 2,4
+    - RETR_TREE : Proper hierarchy
+    - RETR_FLOODFILL : `idk`
+- Method : ContourApproximation
+    - CHAIN_APPROX_NONE : No points skipped
+    - CHAIN_APPROX_SIMPLE : points in vertial and horizontal line are skipped
+        - So for a rectangle only 4 vertices will be stored 
+
 ### Canny Edge
 
 - Based on Sobel Edge detector
@@ -148,4 +176,6 @@
     <img src='./thresh.png' width="500"/>
 
     </center>
+
+
 
