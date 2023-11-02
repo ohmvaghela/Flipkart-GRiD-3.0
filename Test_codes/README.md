@@ -30,6 +30,7 @@
         - Say current position of the detected bot is 1211,631
         - So for the existing bots it will find it's euler's distance is less then 50 it will be updated  
 
+    ___
 
 ### ExtractContour
 - Crop images and pose of all 4 bots and returns it an array
@@ -46,7 +47,7 @@
         - Append this bounding box to list of images
         - Get angle of orientation by feeding to angle class
 
-
+    ---
     
 ### Angle
 
@@ -68,6 +69,7 @@
 - ret
     - return angle in range of [ `-pi` , `+pi` ]
 
+    ---
 
 # Functions
 
@@ -109,7 +111,7 @@
     - Dilate and Erode
 - Gradient
     - Dilate - Erode
-
+    ---
 ### Find Contour
 ``` python
 cv.findContours(
@@ -137,7 +139,7 @@ hierarchy
     - CHAIN_APPROX_NONE : No points skipped
     - CHAIN_APPROX_SIMPLE : points in vertial and horizontal line are skipped
         - So for a rectangle only 4 vertices will be stored 
-
+    ---
 ### Canny Edge
 
 - Based on Sobel Edge detector
@@ -176,6 +178,15 @@ hierarchy
     <img src='./thresh.png' width="500"/>
 
     </center>
+
+
+
+# NumPy (Numerical Python)
+- In python list are not stored in continous memeory 
+- But numpy array (ndarray) are stored in continous memory
+- This is called locality of reference, 
+- Thats the reason why they are fast
+
 
 
 
